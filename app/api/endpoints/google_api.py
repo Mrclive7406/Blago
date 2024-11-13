@@ -19,9 +19,7 @@ router = APIRouter()
     summary='Создание Google таблицы'
 )
 async def get_report(
-        # Сессия
         session: AsyncSession = Depends(get_async_session),
-        # «Обёртка»
         wrapper_services: Aiogoogle = Depends(get_service)
 
 ):

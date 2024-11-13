@@ -22,7 +22,7 @@ ENV_ = '.env'
 
 
 class Settings(BaseSettings):
-    app_title: str = None
+    app_title: str
     app_description: str = DISCRIPTION_APP
     database_url: str = DB_URL
     secret: str = SECRET

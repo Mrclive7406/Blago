@@ -16,7 +16,10 @@ from app.services.investing import investing
 
 CHARITY_PROJECT_PATH = '/'
 CHARITY_PROJECT_MODIFY_PATH = '/{project_id}'
-
+CREATE_PROJECT = 'Создание благотворительного проекта'
+GET_ALL_PROJECT = 'Получение всех благотворительных проектов'
+UPDATE_PROJECT = 'Обновление благотворительного проекта'
+DELETE_PROJECT = 'Удаление благотворительного проекта'
 
 router = APIRouter()
 
@@ -26,7 +29,7 @@ router = APIRouter()
     response_model=CharityProjectDB,
     response_model_exclude_none=True,
     dependencies=[Depends(current_superuser)],
-    summary='Создание благотворительного проекта',
+    summary=CREATE_PROJECT,
 )
 async def create_charity_project(
         charity_project: CharityProjectCreate,
@@ -47,7 +50,7 @@ async def create_charity_project(
     CHARITY_PROJECT_PATH,
     response_model=list[CharityProjectDB],
     response_model_exclude_none=True,
-    summary='Получение всех благотворительных проектов',
+    summary=GET_ALL_PROJECT,
 )
 async def get_all_charity_projects(
         session: AsyncSession = Depends(get_async_session),
@@ -59,7 +62,7 @@ async def get_all_charity_projects(
     CHARITY_PROJECT_MODIFY_PATH,
     response_model=CharityProjectDB,
     dependencies=[Depends(current_superuser)],
-    summary='Обновление благотворительного проекта',
+    summary=UPDATE_PROJECT,
 )
 async def update_charity_project(
         project_id: int,
@@ -82,7 +85,7 @@ async def update_charity_project(
     CHARITY_PROJECT_MODIFY_PATH,
     response_model=CharityProjectDB,
     dependencies=[Depends(current_superuser)],
-    summary='Удаление благотворительного проекта',
+    summary=DELETE_PROJECT,
 )
 async def remove_charity_project(
         project_id: int,

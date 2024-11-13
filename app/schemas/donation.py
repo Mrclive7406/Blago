@@ -5,6 +5,10 @@ from pydantic import BaseModel, Extra, Field, NonNegativeInt, PositiveInt
 
 
 class DonationBase(BaseModel):
+    """
+    Базовая модель для донатного проектов.
+
+    """
     full_amount: PositiveInt = Field()
     comment: Optional[str] = Field()
 
@@ -13,13 +17,20 @@ class DonationBase(BaseModel):
 
 
 class DonationCreate(DonationBase):
-    pass
+    """
+    Модель для создания нового донатного проекта.
+
+    """
 
     class Config:
         extra = Extra.forbid
 
 
 class DonationGet(DonationBase):
+    """
+    Модель для запроса существующего донатного проекта.
+    """
+
     id: int
     create_date: datetime
 
@@ -28,6 +39,10 @@ class DonationGet(DonationBase):
 
 
 class DonationDB(DonationGet):
+    """
+    Модель базы данных для донатного проектов.
+
+    """
     user_id: Optional[int]
     invested_amount: NonNegativeInt = Field(0)
     fully_invested: bool = Field(False)
