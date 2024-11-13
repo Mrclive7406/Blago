@@ -2,7 +2,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import CharityProject, Donation
+from app.models import CharityProject
 
 
 class CRUDBase:
@@ -67,28 +67,3 @@ class CRUDBase:
         await session.delete(db_object)
         await session.commit()
         return db_object
-
-    async def get_open_project(
-            self,
-            session: AsyncSession
-    ):
-        project_result = await session.execute(
-            select(CharityProject)
-            .where(CharityProject.fully_invested == 0)
-            .order_by(CharityProject.create_date)
-        )
-        project = project_result.scalars().first()
-        return project
-
-    async def get_open_donation(
-            self,
-            session: AsyncSession
-    ):
-        donation_result = await session.execute(
-            select(Donation)
-            .where(Donation.fully_invested == 0)
-            .order_by(Donation.create_date)
-        )
-        donation = donation_result.scalars().first()
-
-        return donation

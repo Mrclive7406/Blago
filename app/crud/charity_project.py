@@ -1,7 +1,6 @@
+from typing import Optional, Any, List
 
-from typing import Optional
-
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDBase
@@ -11,10 +10,11 @@ from app.models import CharityProject
 class CRUDCharityproject(CRUDBase):
 
     async def get_project_id_by_name(
-            self,
-            project_name: str,
-            session: AsyncSession
+        self,
+        project_name: str,
+        session: AsyncSession
     ) -> Optional[int]:
+        """Получает идентификатор проекта по имени."""
         db_project_id = await session.execute(
             select(CharityProject.id).where(
                 CharityProject.name == project_name
@@ -22,10 +22,26 @@ class CRUDCharityproject(CRUDBase):
         )
         return db_project_id.scalars().first()
 
-    async def get_project_by_complection_rate(
-            self,
-            session: AsyncSession
-    ) -> list:
+    async def get_projects_by_keywords(
+        self,
+        session: AsyncSession,
+        **kwargs: Any
+    ) -> List[CharityProject]:
+        """Получает проекты по произвольным ключевым аргументам."""
+        query = select(CharityProject)
+
+        for key, value in kwargs.items():
+            if hasattr(CharityProject, key):
+                query = query.where(getattr(CharityProject, key) == value)
+
+        result = await session.execute(query)
+        return result.scalars().all()
+
+    async def get_project_by_completion_rate(
+        self,
+        session: AsyncSession
+    ) -> List[tuple]:
+        """Получает проекты с их скоростью завершения."""
         projects = await session.execute(
             select(
                 CharityProject.name,

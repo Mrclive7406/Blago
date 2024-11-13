@@ -1,21 +1,16 @@
 from http import HTTPStatus
-
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.crud.charity_project import charity_project_crud
 from app.models.charity_project import CharityProject
 
-PROJECT_NAME_ALREDY_EXIST = 'Проект с таким именем уже существует!'
-NAME_CANNOT_NONE = 'Поле с таким именем не может существовать'
-DISCRIPTION_CANNOT_NONE = 'Поле с таким описания не может существовать'
-PROJECT_NAME_ALREDY_EXIST = 'Проект с таким именем уже существует!'
+PROJECT_NAME_ALREADY_EXISTS = 'Проект с таким именем уже существует!'
 PROJECT_NOT_FOUND = 'Проект не найден'
-PROJECT_CANNOT_DELETION = ('В проект были внесены средства,'
-                           'не подлежит удалению!')
+PROJECT_CANNOT_DELETION = 'В проект были внесены средства,'
+'не подлежит удалению!'
 CANNOT_EDITED = 'Закрытый проект нельзя редактировать!'
-LESS_AMOUNT_EDITING = ('При редактировании проекта нельзя устанавливать'
-                       'требуемую сумму меньше внесённой.')
+LESS_AMOUNT_EDITING = 'При редактировании проекта нельзя устанавливать'
+' требуемую сумму меньше внесённой.'
 
 
 async def validate_charity_project(
@@ -23,44 +18,34 @@ async def validate_charity_project(
     description: str,
     session: AsyncSession
 ) -> None:
-    if not name:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=NAME_CANNOT_NONE
-        )
+    """Проверяет корректность благотворительного проекта."""
 
-    if not description:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=DISCRIPTION_CANNOT_NONE
-        )
-
-    project_id = await charity_project_crud.get_project_id_by_name(
-        name, session)
-    if project_id:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=PROJECT_NAME_ALREDY_EXIST
-        )
+    await check_name_is_unique(name, session)
 
 
 async def check_name_is_unique(
-        charity_project: str,
-        session: AsyncSession,
+    charity_project_name: str,
+    session: AsyncSession
 ) -> None:
+    """Проверяет, что имя благотворительного проекта уникально."""
+
     project_id = await charity_project_crud.get_project_id_by_name(
-        charity_project, session)
+        charity_project_name, session
+    )
     if project_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=PROJECT_NAME_ALREDY_EXIST
+            detail=PROJECT_NAME_ALREADY_EXISTS
         )
 
 
 async def check_charity_project_exists(
-        project_id: int,
-        session: AsyncSession,
+    project_id: int,
+    session: AsyncSession
 ) -> CharityProject:
+    """Проверяет, существует ли благотворительный
+    проект по указанному идентификатору."""
+
     charity_project = await charity_project_crud.get(
         object_id=project_id, session=session
     )
@@ -73,25 +58,19 @@ async def check_charity_project_exists(
 
 
 async def check_project_before_delete(
-        project_id,
-        session: AsyncSession
-):
-    charity_project = await charity_project_crud.get(project_id, session)
-    if not charity_project:
-        raise HTTPException(
-            status_code=HTTPStatus.UNPROCESSABLE_ENTITY,
-            detail=PROJECT_NOT_FOUND
-        )
-    if charity_project.fully_invested:
+    project_id: int,
+    session: AsyncSession
+) -> CharityProject:
+    """Проверяет, можно ли удалить благотворительный проект."""
+
+    charity_project = await check_charity_project_exists(project_id, session)
+
+    if charity_project.fully_invested or charity_project.invested_amount > 0:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail=PROJECT_CANNOT_DELETION
         )
-    if charity_project.invested_amount > 0:
-        raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail=PROJECT_CANNOT_DELETION
-        )
+
     return charity_project
 
 
@@ -99,8 +78,10 @@ async def validate_project_update(
     project_id: int,
     full_amount: float,
     session: AsyncSession
-):
-    charity_project = await charity_project_crud.get(project_id, session)
+) -> CharityProject:
+    """Проверяет возможность обновления благотворительного проекта."""
+
+    charity_project = await check_charity_project_exists(project_id, session)
 
     if charity_project.fully_invested:
         raise HTTPException(

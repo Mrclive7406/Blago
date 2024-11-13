@@ -1,1 +1,3 @@
-from .invisting import invisting  # noqa
+from .investing import investing
+
+__all__ = ['investing']

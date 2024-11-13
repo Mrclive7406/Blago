@@ -1,3 +1,4 @@
+import logging
 from typing import Optional, Union
 
 from fastapi import Depends, Request
@@ -62,7 +63,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
             user: User,
             request: Optional[Request] = None
     ) -> None:
-        print(f'Пользователь {user.email} зарегистрирован.')
+        logging.info(f'Пользователь {user.email} зарегистрирован.')
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):

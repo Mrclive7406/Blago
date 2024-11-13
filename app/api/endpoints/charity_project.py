@@ -12,7 +12,7 @@ from app.crud.charity_project import charity_project_crud
 from app.schemas.charity_project import (CharityProjectCreate,
                                          CharityProjectDB,
                                          CharityProjectUpdate)
-from app.services.invisting import invisting
+from app.services.investing import investing
 
 CHARITY_PROJECT_PATH = '/'
 CHARITY_PROJECT_MODIFY_PATH = '/{project_id}'
@@ -26,6 +26,7 @@ router = APIRouter()
     response_model=CharityProjectDB,
     response_model_exclude_none=True,
     dependencies=[Depends(current_superuser)],
+    summary='Создание благотворительного проекта',
 )
 async def create_charity_project(
         charity_project: CharityProjectCreate,
@@ -37,7 +38,7 @@ async def create_charity_project(
         session=session
     )
 
-    return await invisting(
+    return await investing(
         session,
         await charity_project_crud.create(charity_project, session))
 
@@ -46,6 +47,7 @@ async def create_charity_project(
     CHARITY_PROJECT_PATH,
     response_model=list[CharityProjectDB],
     response_model_exclude_none=True,
+    summary='Получение всех благотворительных проектов',
 )
 async def get_all_charity_projects(
         session: AsyncSession = Depends(get_async_session),
@@ -57,6 +59,7 @@ async def get_all_charity_projects(
     CHARITY_PROJECT_MODIFY_PATH,
     response_model=CharityProjectDB,
     dependencies=[Depends(current_superuser)],
+    summary='Обновление благотворительного проекта',
 )
 async def update_charity_project(
         project_id: int,
@@ -78,7 +81,9 @@ async def update_charity_project(
 @router.delete(
     CHARITY_PROJECT_MODIFY_PATH,
     response_model=CharityProjectDB,
-    dependencies=[Depends(current_superuser)],)
+    dependencies=[Depends(current_superuser)],
+    summary='Удаление благотворительного проекта',
+)
 async def remove_charity_project(
         project_id: int,
         session: AsyncSession = Depends(get_async_session),):

@@ -1,16 +1,28 @@
 from typing import Optional
+
 from pydantic import BaseSettings, EmailStr
 
-# Константы
 SECRET = 'SECRET'
-FOUNDATION_KYTTI = 'Кошачий благотворительный фонд'
+"""
+Константам тоже стоит добавлять докстринги с описанием
+"""
 DISCRIPTION_APP = 'Сервис для поддержки котиков!'
+"""
+Описание приложения, которое поддерживает котиков.
+"""
 DB_URL = 'sqlite+aiosqlite:///./charity_project_donation.db'
-ENV = '.env'
+"""
+URL для подключения к базе данных.
+В данном случае используется SQLite с асинхронной библиотекой.
+"""
+ENV_ = '.env'
+"""
+Имя файла конфигурации, содержащего переменные среды.
+"""
 
 
 class Settings(BaseSettings):
-    app_title: str = FOUNDATION_KYTTI
+    app_title: str = None
     app_description: str = DISCRIPTION_APP
     database_url: str = DB_URL
     secret: str = SECRET
@@ -29,7 +41,7 @@ class Settings(BaseSettings):
     email: Optional[str]
 
     class Config:
-        env_file = ENV
+        env_file = ENV_
 
 
 settings = Settings()

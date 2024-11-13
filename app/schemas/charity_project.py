@@ -7,9 +7,15 @@ from app.core.constants import MAX_LENGTH, MIN_LENGTH
 
 
 class CharityProjectBase(BaseModel):
-    name: Optional[str] = Field(None,
-                                min_length=MIN_LENGTH,
-                                max_length=MAX_LENGTH)
+    """
+    Базовая модель для благотворительных проектов.
+
+    """
+    name: Optional[str] = Field(
+        None,
+        min_length=MIN_LENGTH,
+        max_length=MAX_LENGTH
+    )
     description: Optional[str] = Field(None, min_length=MIN_LENGTH)
     full_amount: Optional[PositiveInt]
 
@@ -18,16 +24,26 @@ class CharityProjectBase(BaseModel):
 
 
 class CharityProjectCreate(CharityProjectBase):
-    name: str = Field(None, min_length=MIN_LENGTH, max_length=MAX_LENGTH)
-    description: str = Field(None, min_length=MIN_LENGTH)
+    """
+    Модель для создания нового благотворительного проекта.
+
+    """
+    name: str = Field(..., min_length=MIN_LENGTH, max_length=MAX_LENGTH)
+    description: str = Field(..., min_length=MIN_LENGTH)
     full_amount: PositiveInt
 
 
 class CharityProjectUpdate(CharityProjectBase):
-    pass
+    """
+    Модель для обновления существующего благотворительного проекта.
+    """
 
 
 class CharityProjectDB(CharityProjectBase):
+    """
+    Модель базы данных для благотворительных проектов.
+
+    """
     id: int
     invested_amount: NonNegativeInt = Field(0)
     fully_invested: bool = Field(False)

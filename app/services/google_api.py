@@ -1,12 +1,13 @@
 from datetime import datetime
 
 from aiogoogle import Aiogoogle
+
 from app.core.config import settings
 
 FORMAT = "%Y/%m/%d %H:%M:%S"
 
 
-async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
+async def create_spreadsheet(wrapper_services: Aiogoogle) -> str:
     now_date_time = datetime.now().strftime(FORMAT)
     service = await wrapper_services.discover('sheets', 'v4')
     spreadsheet_body = {
@@ -25,7 +26,7 @@ async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
     return spreadsheetid
 
 
-async def set_user_permissions(
+async def add_user_permissions(
         spreadsheetid: str,
         wrapper_services: Aiogoogle
 ) -> None:
@@ -41,7 +42,7 @@ async def set_user_permissions(
         ))
 
 
-async def spreadsheets_update_value(
+async def update_spreadsheet_value(
         spreadsheetid: str,
         closed_projects: list,
         wrapper_services: Aiogoogle
