@@ -17,8 +17,8 @@ class PreBase:
     id: int = Column(Integer, primary_key=True)
     invested_amount: int = Column(Integer, default=0)
     fully_invested: bool = Column(Boolean, default=False)
-    create_date: datetime = Column(DateTime, default=datetime.now)
-    close_date: datetime | None = Column(DateTime, nullable=True)
+    create_date = Column(DateTime, default=datetime.now)
+    close_date = Column(DateTime, nullable=True)
 
 
 Base = declarative_base(cls=PreBase)
