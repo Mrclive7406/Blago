@@ -6,6 +6,10 @@ SECRET = 'SECRET'
 """
 Константам тоже стоит добавлять докстринги с описанием
 """
+FOUNDATION_KYTTI = 'Благотворительный фонд поддержки котиков QRKot'
+"""
+Название фонда
+"""
 DISCRIPTION_APP = 'Сервис для поддержки котиков!'
 """
 Описание приложения, которое поддерживает котиков.
@@ -22,7 +26,11 @@ ENV_ = '.env'
 
 
 class Settings(BaseSettings):
-    app_title: str
+    """
+    Класс для управления настройками приложения.
+    Загружает параметры из файла окружения и задает значения по умолчанию.
+    """
+    app_title: str = FOUNDATION_KYTTI
     app_description: str = DISCRIPTION_APP
     database_url: str = DB_URL
     secret: str = SECRET
@@ -42,6 +50,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ENV_
+        env_file_encoding = "utf-8"
 
 
 settings = Settings()
