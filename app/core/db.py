@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import AsyncGenerator
 
-from sqlalchemy import Boolean, Column, DateTime, Integer
+from sqlalchemy import Boolean, Column, DateTime, Integer, func
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, declared_attr, sessionmaker
 
@@ -19,7 +19,7 @@ class PreBase:
     invested_amount: int = Column(Integer, default=0)
     fully_invested: bool = Column(Boolean, default=False)
     create_date = Column(DateTime, default=datetime.now)
-    close_date = Column(DateTime, nullable=True)
+    close_date = Column(DateTime, default=func.now(), nullable=True)
 
 
 Base = declarative_base(cls=PreBase)

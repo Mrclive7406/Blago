@@ -26,9 +26,7 @@ async def creating_donation(
         session: AsyncSession = Depends(get_async_session),
 ):
     """Создает благотворительное пожертвование от имени пользователя."""
-    new_donation = await donation_crud.create(
-        donation, user, session
-    )
+    new_donation = await donation_crud.create(donation, session)
     return await investing(session, new_donation)
 
 

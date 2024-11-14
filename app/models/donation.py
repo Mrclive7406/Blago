@@ -13,9 +13,9 @@ class Donation(Base):
     full_amount = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return (f"(<Donation(id={self.id}, user_id={self.user_id}, "
-                f"full_amount={self.full_amount},"
-                f"invested_amount={self.invested_amount},  "
-                f"fully_invested={self.fully_invested}, "
-                f"create_date={self.create_date}, "
-                f"close_date={self.close_date})>)")
+        return (f'(<Donation(id={self.id}, user_id={self.user_id},'
+                f'full_amount={self.full_amount},'
+                f'invested_amount={self.invested_amount},'
+                f'fully_invested={self.fully_invested},'
+                f'create_date={self.create_date},'
+                f'close_date={self.close_date})>)')

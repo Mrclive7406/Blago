@@ -72,34 +72,40 @@ class CRUDBase:
         return db_object
 
 
-class BaseCharityRepository(CRUDBase):
-    """Базовый класс для работы с проектами и пожертвованиями."""
+class CharityProjectRepository(CRUDBase):
+    """Репозиторий для управления благотворительными проектами."""
 
-    async def get_open_project(
-            self,
-            session: AsyncSession
-    ):
+    def __init__(self):
+        """Инициализирует CharityProjectRepository с заданной моделью."""
+        super().__init__(CharityProject)
+
+    async def get_open_project(self, session: AsyncSession):
         """Возвращает первый открытый благотворительный проект."""
         project_result = await session.execute(
             select(CharityProject)
             .where(CharityProject.fully_invested == 0)
             .order_by(CharityProject.create_date)
         )
-        project = project_result.scalars().first()
-        return project
+        return project_result.scalars().first()
 
-    async def get_open_donation(
-            self,
-            session: AsyncSession
-    ):
+
+class DonationRepository(CRUDBase):
+    """Репозиторий для управления пожертвованиями."""
+
+    def __init__(self):
+        """Инициализирует DonationRepository с заданной моделью."""
+        super().__init__(Donation)
+
+    async def get_open_donation(self, session: AsyncSession):
         """Возвращает первое открытое пожертвование."""
         donation_result = await session.execute(
             select(Donation)
             .where(Donation.fully_invested == 0)
             .order_by(Donation.create_date)
         )
-        donation = donation_result.scalars().first()
-        return donation
+        return donation_result.scalars().first()
 
 
-base_charity_repository_crud = BaseCharityRepository(CRUDBase)
+charity_project_repository_crud = CharityProjectRepository()
+donation_repository_crud = DonationRepository()
+base_repository_crud = CRUDBase

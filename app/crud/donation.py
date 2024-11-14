@@ -8,20 +8,6 @@ from app.models import Donation, User
 class CRUDDonation(CRUDBase):
     """Класс для управления операциями с пожертвованиями."""
 
-    async def create(
-            self,
-            object_in,
-            user: User,
-            session: AsyncSession,
-    ):
-        """Создает новое пожертвование и связывает его с пользователем."""
-        object_in_data = object_in.dict()
-        db_object = self.model(**object_in_data)
-        session.add(db_object)
-        await session.commit()
-        await session.refresh(db_object)
-        return db_object
-
     async def get_by_user(
             self,
             session: AsyncSession,
