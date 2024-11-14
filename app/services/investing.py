@@ -2,12 +2,12 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.crud.charity_repository import charity_repository_crud
-from app.crud.donation_repository import donation_repository_crud
+from app.crud.base import base_charity_repository_crud
 
 
 async def invest_in_entity(session: AsyncSession, entity,
                            balance_entity, amount_to_invest):
+    """Инвестирует указанную сумму в сущность и обновляет ее статус."""
     entity.invested_amount += amount_to_invest
 
     if balance_entity <= amount_to_invest:
@@ -16,8 +16,9 @@ async def invest_in_entity(session: AsyncSession, entity,
 
 
 async def investing(session: AsyncSession, obj):
-    project = await charity_repository_crud.get_open_project(session)
-    donation = await donation_repository_crud.get_open_donation(session)
+    """Осуществляет инвестиции в открытые проекты и пожертвования."""
+    project = await base_charity_repository_crud.get_open_project(session)
+    donation = await base_charity_repository_crud.get_open_donation(session)
 
     if not project or not donation:
         await session.commit()

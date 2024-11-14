@@ -6,6 +6,7 @@ from app.models import Donation, User
 
 
 class CRUDDonation(CRUDBase):
+    """Класс для управления операциями с пожертвованиями."""
 
     async def create(
             self,
@@ -13,6 +14,7 @@ class CRUDDonation(CRUDBase):
             user: User,
             session: AsyncSession,
     ):
+        """Создает новое пожертвование и связывает его с пользователем."""
         object_in_data = object_in.dict()
         db_object = self.model(**object_in_data)
         session.add(db_object)
@@ -25,6 +27,7 @@ class CRUDDonation(CRUDBase):
             session: AsyncSession,
             user: User
     ) -> list[Donation]:
+        """Получает все пожертвования, сделанные указанным пользователем."""
         user_donations = await session.execute(
             select(Donation).where(
                 Donation.user_id == user.id

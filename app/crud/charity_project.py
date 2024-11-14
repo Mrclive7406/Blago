@@ -8,6 +8,7 @@ from app.models import CharityProject
 
 
 class CRUDCharityproject(CRUDBase):
+    """Репозиторий для управления благотворительными проектами."""
 
     async def get_project_id_by_name(
         self,

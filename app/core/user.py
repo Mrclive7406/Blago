@@ -16,13 +16,18 @@ from app.models import User
 from app.schemas.user import UserCreate
 
 TOKEN_URL = 'auth/jwt/login'
+"""URL для получения токенов JWT."""
 AUTH_BACKEND_NAME = 'jwt'
+"""Имя бэкенда аутентификации."""
 PASSWORD_LEN_ERROR = 'Пароль должен содержать не менее 3 символов'
+"""Сообщение об ошибке, когда пароль слишком короткий."""
 NO_EMAIL_IN_PASSWORD = ('Пароль не должен содержать адрес электронной'
                         'почты')
+"""Сообщение об ошибке, когда пароль содержит адрес электронной почты"""
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
+    """Получает экземпляр доступа к базе данных пользователей."""
     yield SQLAlchemyUserDatabase(session, User)
 
 
@@ -30,6 +35,7 @@ bearer_transport = BearerTransport(tokenUrl=TOKEN_URL)
 
 
 def get_jwt_strategy() -> JWTStrategy:
+    """Получает стратегию JWT для аутентификации пользователей."""
     return JWTStrategy(
         secret=settings.secret,
         lifetime_seconds=TOKEN_LIFE_TIME
@@ -44,11 +50,14 @@ auth_backend = AuthenticationBackend(
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
+    """Менеджер пользователей для обработки операций."""
+
     async def validate_password(
             self,
             password: str,
             user: Union[UserCreate, User]
     ) -> None:
+        """Проверяет, что пароль соответствует заданным критериям."""
         if len(password) < PASSWORD_LEN_VALUE:
             raise InvalidPasswordException(
                 reason=PASSWORD_LEN_ERROR
@@ -63,10 +72,12 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
             user: User,
             request: Optional[Request] = None
     ) -> None:
+        """Выполняет действия после успешной регистрации пользователя."""
         logging.info(f'Пользователь {user.email} зарегистрирован.')
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):
+    """Получает экземпляр UserManager для управления пользователями."""
     yield UserManager(user_db)
 
 

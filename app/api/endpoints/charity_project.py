@@ -33,8 +33,8 @@ router = APIRouter()
 )
 async def create_charity_project(
         charity_project: CharityProjectCreate,
-        session: AsyncSession = Depends(get_async_session),
-):
+        session: AsyncSession = Depends(get_async_session)):
+    """Создает новый благотворительный проект."""
     await validate_charity_project(
         name=charity_project.name,
         description=charity_project.description,
@@ -50,11 +50,10 @@ async def create_charity_project(
     CHARITY_PROJECT_PATH,
     response_model=list[CharityProjectDB],
     response_model_exclude_none=True,
-    summary=GET_ALL_PROJECT,
-)
+    summary=GET_ALL_PROJECT)
 async def get_all_charity_projects(
-        session: AsyncSession = Depends(get_async_session),
-):
+        session: AsyncSession = Depends(get_async_session),):
+    """Получает список всех благотворительных проектов."""
     return await charity_project_crud.get_multi(session)
 
 
@@ -62,13 +61,12 @@ async def get_all_charity_projects(
     CHARITY_PROJECT_MODIFY_PATH,
     response_model=CharityProjectDB,
     dependencies=[Depends(current_superuser)],
-    summary=UPDATE_PROJECT,
-)
+    summary=UPDATE_PROJECT)
 async def update_charity_project(
         project_id: int,
         object_in: CharityProjectUpdate,
-        session: AsyncSession = Depends(get_async_session),
-):
+        session: AsyncSession = Depends(get_async_session),):
+    """Обновляет данные существующего благотворительного проекта."""
     project = await validate_project_update(
         project_id=project_id,
         full_amount=object_in.full_amount,
@@ -89,8 +87,8 @@ async def update_charity_project(
 )
 async def remove_charity_project(
         project_id: int,
-        session: AsyncSession = Depends(get_async_session),):
-
+        session: AsyncSession = Depends(get_async_session)):
+    """Удаляет существующий благотворительный проект."""
     await check_project_before_delete(project_id, session)
     charity_project = await check_charity_project_exists(
         project_id, session)

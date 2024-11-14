@@ -4,10 +4,8 @@ from app.core.db import Base
 
 
 class Donation(Base):
-    """
-    Модель пожертвования, представляющая запись о пожертвовании пользователя.
+    """Модель представляющая запись о пожертвовании пользователя."""
 
-    """
     __tablename__ = 'donation'
 
     user_id = Column(Integer, ForeignKey('user.id'))

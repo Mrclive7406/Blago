@@ -23,6 +23,7 @@ async def get_report(
         wrapper_services: Aiogoogle = Depends(get_service)
 
 ):
+    """Создает отчет в виде Google таблицы, добавляет информацию о проектах."""
     project = await charity_project.get_project_by_complection_rate(session)
     spreadsheetid = await create_spreadsheet(wrapper_services)
     await add_user_permissions(spreadsheetid, wrapper_services)

@@ -8,6 +8,7 @@ FORMAT = "%Y/%m/%d %H:%M:%S"
 
 
 async def create_spreadsheet(wrapper_services: Aiogoogle) -> str:
+    """Создает новую Google таблицу для отчета."""
     now_date_time = datetime.now().strftime(FORMAT)
     service = await wrapper_services.discover('sheets', 'v4')
     spreadsheet_body = {
@@ -30,6 +31,7 @@ async def add_user_permissions(
         spreadsheetid: str,
         wrapper_services: Aiogoogle
 ) -> None:
+    """Добавляет разрешения пользователю на созданную Google таблицу."""
     permissions_body = {'type': 'user',
                         'role': 'writer',
                         'emailAddress': settings.email}
@@ -47,6 +49,7 @@ async def update_spreadsheet_value(
         closed_projects: list,
         wrapper_services: Aiogoogle
 ) -> None:
+    """Обновляет значения в Google таблице на основе завершенных проектов."""
     now_date_time = datetime.now().strftime(FORMAT)
     service = await wrapper_services.discover('sheets', 'v4')
     table_values = [

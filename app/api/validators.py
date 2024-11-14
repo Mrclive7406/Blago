@@ -21,7 +21,6 @@ async def validate_charity_project(
     session: AsyncSession
 ) -> None:
     """Проверяет корректность благотворительного проекта."""
-
     await check_name_is_unique(name, session)
 
 
@@ -30,7 +29,6 @@ async def check_name_is_unique(
     session: AsyncSession
 ) -> None:
     """Проверяет, что имя благотворительного проекта уникально."""
-
     project_id = await charity_project_crud.get_project_id_by_name(
         charity_project_name, session
     )
@@ -45,9 +43,7 @@ async def check_charity_project_exists(
     project_id: int,
     session: AsyncSession
 ) -> CharityProject:
-    """Проверяет, существует ли благотворительный
-    проект по указанному идентификатору."""
-
+    """Проверяет благотворительный проект по указанному идентификатору."""
     charity_project = await charity_project_crud.get(
         object_id=project_id, session=session
     )
@@ -64,7 +60,6 @@ async def check_project_before_delete(
     session: AsyncSession
 ) -> CharityProject:
     """Проверяет, можно ли удалить благотворительный проект."""
-
     charity_project = await check_charity_project_exists(project_id, session)
 
     if charity_project.fully_invested or charity_project.invested_amount > 0:
@@ -82,7 +77,6 @@ async def validate_project_update(
     session: AsyncSession
 ) -> CharityProject:
     """Проверяет возможность обновления благотворительного проекта."""
-
     charity_project = await check_charity_project_exists(project_id, session)
 
     if charity_project.fully_invested:
