@@ -72,7 +72,20 @@ class CRUDBase:
         return db_object
 
 
-class CharityProjectRepository(CRUDBase):
+class BaseCharityRepository(CRUDBase):
+    """Базовый репозиторий для благотворительных проектов."""
+
+    async def get_not_fully_invested(self, session: AsyncSession):
+        """Возвращает первую не полностью инвестированную запись."""
+        db_obj = await session.execute(
+            select(self.model).where(
+                self.model.fully_invested == 0
+            ).order_by(self.model.create_date)
+        )
+        return db_obj.scalars().first()
+
+
+class CharityProjectRepository(BaseCharityRepository):
     """Репозиторий для управления благотворительными проектами."""
 
     def __init__(self):
@@ -81,15 +94,10 @@ class CharityProjectRepository(CRUDBase):
 
     async def get_open_project(self, session: AsyncSession):
         """Возвращает первый открытый благотворительный проект."""
-        project_result = await session.execute(
-            select(CharityProject)
-            .where(CharityProject.fully_invested == 0)
-            .order_by(CharityProject.create_date)
-        )
-        return project_result.scalars().first()
+        return await self.get_not_fully_invested(session)
 
 
-class DonationRepository(CRUDBase):
+class DonationRepository(BaseCharityRepository):
     """Репозиторий для управления пожертвованиями."""
 
     def __init__(self):
@@ -98,12 +106,7 @@ class DonationRepository(CRUDBase):
 
     async def get_open_donation(self, session: AsyncSession):
         """Возвращает первое открытое пожертвование."""
-        donation_result = await session.execute(
-            select(Donation)
-            .where(Donation.fully_invested == 0)
-            .order_by(Donation.create_date)
-        )
-        return donation_result.scalars().first()
+        return await self.get_not_fully_invested(session)
 
 
 charity_project_repository_crud = CharityProjectRepository()

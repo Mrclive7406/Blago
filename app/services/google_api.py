@@ -4,7 +4,7 @@ from aiogoogle import Aiogoogle
 
 from app.core.config import settings
 
-FORMAT = "%Y/%m/%d %H:%M:%S"
+FORMAT = '%Y/%m/%d %H:%M:%S'
 
 
 async def create_spreadsheet(wrapper_services: Aiogoogle) -> str:
@@ -40,7 +40,7 @@ async def add_user_permissions(
         service.permissions.create(
             fileId=spreadsheetid,
             json=permissions_body,
-            fields="id"
+            fields='id'
         ))
 
 

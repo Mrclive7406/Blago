@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, Text
+from sqlalchemy import Column, ForeignKey, Integer, Text, CheckConstraint
 
 from app.core.db import Base
 
@@ -11,6 +11,14 @@ class Donation(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     comment = Column(Text, nullable=True)
     full_amount = Column(Integer, nullable=False)
+
+    __table_args__ = (
+        CheckConstraint('full_amount > 0',
+                        name='check_donation_amount_positive'),
+        CheckConstraint('full_amount >= invested_amount',
+                        name='check_donation_invested_amount_not_exceed_full'),
+        CheckConstraint('invested_amount >= 0',
+                        name='check_donation_invested_amount_positive'),)
 
     def __repr__(self):
         return (f'(<Donation(id={self.id}, user_id={self.user_id},'
