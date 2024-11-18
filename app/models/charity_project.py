@@ -7,11 +7,6 @@ class CharityProject(Base):
     """Модель благотворительного проекта."""
 
     __tablename__ = 'charity_project'
-
-    name = Column(String(100), unique=True, nullable=False)
-    description = Column(Text, nullable=False)
-    full_amount = Column(Integer, nullable=False)
-
     __table_args__ = (
         CheckConstraint('full_amount > 0', name='check_full_amount_positive'),
         CheckConstraint('full_amount >= invested_amount',
@@ -19,6 +14,10 @@ class CharityProject(Base):
         CheckConstraint('invested_amount >= 0',
                         name='check_invested_amount_positive'),
     )
+
+    name = Column(String(100), unique=True, nullable=False)
+    description = Column(Text, nullable=False)
+    full_amount = Column(Integer, nullable=False)
 
     def __repr__(self):
         return ('<CharityProject(id={self.id},'
