@@ -10,6 +10,10 @@ from app.models import CharityProject
 class CRUDCharityproject(CRUDBase):
     """Репозиторий для управления благотворительными проектами."""
 
+    def __init__(self):
+        """Инициализирует DonationRepository с заданной моделью."""
+        super().__init__(CharityProject)
+
     async def get_project_id_by_name(
         self,
         project_name: str,
@@ -58,4 +62,4 @@ class CRUDCharityproject(CRUDBase):
         return projects.all()
 
 
-charity_project_crud = CRUDCharityproject(CharityProject)
+charity_project_crud = CRUDCharityproject()

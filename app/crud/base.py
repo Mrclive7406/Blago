@@ -2,8 +2,6 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import CharityProject, Donation
-
 
 class CRUDBase:
     """Базовый репозиторий для работы с моделями."""
@@ -71,10 +69,6 @@ class CRUDBase:
         await session.commit()
         return db_object
 
-
-class BaseCharityRepository(CRUDBase):
-    """Базовый репозиторий для благотворительных проектов."""
-
     async def get_not_fully_invested(self, session: AsyncSession):
         """Возвращает первую не полностью инвестированную запись."""
         db_obj = await session.execute(
@@ -85,30 +79,4 @@ class BaseCharityRepository(CRUDBase):
         return db_obj.scalars().first()
 
 
-class CharityProjectRepository(BaseCharityRepository):
-    """Репозиторий для управления благотворительными проектами."""
-
-    def __init__(self):
-        """Инициализирует CharityProjectRepository с заданной моделью."""
-        super().__init__(CharityProject)
-
-    async def get_open_project(self, session: AsyncSession):
-        """Возвращает первый открытый благотворительный проект."""
-        return await self.get_not_fully_invested(session)
-
-
-class DonationRepository(BaseCharityRepository):
-    """Репозиторий для управления пожертвованиями."""
-
-    def __init__(self):
-        """Инициализирует DonationRepository с заданной моделью."""
-        super().__init__(Donation)
-
-    async def get_open_donation(self, session: AsyncSession):
-        """Возвращает первое открытое пожертвование."""
-        return await self.get_not_fully_invested(session)
-
-
-charity_project_repository_crud = CharityProjectRepository()
-donation_repository_crud = DonationRepository()
 base_repository_crud = CRUDBase

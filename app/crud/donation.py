@@ -8,6 +8,10 @@ from app.models import Donation, User
 class CRUDDonation(CRUDBase):
     """Класс для управления операциями с пожертвованиями."""
 
+    def __init__(self):
+        """Инициализирует DonationRepository с заданной моделью."""
+        super().__init__(Donation)
+
     async def get_by_user(
             self,
             session: AsyncSession,
@@ -22,4 +26,4 @@ class CRUDDonation(CRUDBase):
         return user_donations.scalars().all()
 
 
-donation_crud = CRUDDonation(Donation)
+donation_crud = CRUDDonation()
