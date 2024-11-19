@@ -1,11 +1,11 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.crud.base import CRUDBase
+from app.crud.base import BaseCharityRepository
 from app.models import Donation, User
 
 
-class CRUDDonation(CRUDBase):
+class CRUDDonation(BaseCharityRepository):
     """Класс для управления операциями с пожертвованиями."""
 
     def __init__(self):

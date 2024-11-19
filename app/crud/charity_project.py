@@ -3,11 +3,11 @@ from typing import Any, List, Optional
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.crud.base import CRUDBase
+from app.crud.base import BaseCharityRepository
 from app.models import CharityProject
 
 
-class CRUDCharityproject(CRUDBase):
+class CRUDCharityproject(BaseCharityRepository):
     """Репозиторий для управления благотворительными проектами."""
 
     def __init__(self):

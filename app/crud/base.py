@@ -69,6 +69,10 @@ class CRUDBase:
         await session.commit()
         return db_object
 
+
+class BaseCharityRepository(CRUDBase):
+    """Базовый класс для работы с благотворительными моделями."""
+
     async def get_not_fully_invested(self, session: AsyncSession):
         """Возвращает первую не полностью инвестированную запись."""
         db_obj = await session.execute(
@@ -77,6 +81,3 @@ class CRUDBase:
             ).order_by(self.model.create_date)
         )
         return db_obj.scalars().first()
-
-
-base_repository_crud = CRUDBase
